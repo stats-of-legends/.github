@@ -1,0 +1,31 @@
+name: Composant du design system
+description: Proposer ou modifier un composant de SOL UI
+labels: ["ctx:design-system"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Nom du composant
+      placeholder: "Stat/Winrate, Module/TierList…"
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: Besoin et cas d'usage
+    validations:
+      required: true
+  - type: textarea
+    id: states
+    attributes:
+      label: Variantes et états
+      description: défaut, hover, focus, active, disabled, loading, erreur…
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibilité
+      description: Clavier, rôle ARIA, contraste, alternative textuelle.
+  - type: textarea
+    id: tokens
+    attributes:
+      label: Tokens consommés ou à créer

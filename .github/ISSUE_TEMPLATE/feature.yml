@@ -1,0 +1,35 @@
+name: Fonctionnalité
+description: Proposer une nouvelle fonctionnalité ou une amélioration
+labels: ["type:feat"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problème à résoudre
+      description: Pour qui, dans quelle situation ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Critère de « terminé »
+  - type: dropdown
+    id: context
+    attributes:
+      label: Contexte
+      options: [game-catalog, ingestion, players, stats-lol, insights, identity, billing, community, lore, privacy, ops, design-system, plusieurs]
+  - type: checkboxes
+    id: impacts
+    attributes:
+      label: Impacts
+      options:
+        - label: Données personnelles (RGPD)
+        - label: Accessibilité
+        - label: Performance / SEO
+        - label: Monétisation / politique Riot

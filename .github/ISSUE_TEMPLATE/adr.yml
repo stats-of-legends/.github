@@ -1,0 +1,27 @@
+name: Décision d'architecture (ADR)
+description: Proposer une décision structurante à documenter
+labels: ["type:adr"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexte
+      description: Le problème et les contraintes.
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Décision proposée
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives et raisons du rejet
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Conséquences (positives et négatives)
