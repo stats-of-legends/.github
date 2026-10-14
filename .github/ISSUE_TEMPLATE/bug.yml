@@ -1,0 +1,32 @@
+name: Bug
+description: Un comportement incorrect sur le site ou l'API
+labels: ["type:fix"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Que se passe-t-il ?
+      description: Comportement observé et comportement attendu.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes de reproduction
+      placeholder: "1. Aller sur …\n2. Cliquer sur …\n3. Voir l'erreur"
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL ou route d'API concernée
+  - type: dropdown
+    id: context
+    attributes:
+      label: Contexte
+      options: [game-catalog, ingestion, players, stats-lol, insights, identity, billing, community, lore, privacy, ops, design-system, je ne sais pas]
+  - type: textarea
+    id: env
+    attributes:
+      label: Environnement
+      description: Navigateur, appareil, région du joueur, langue.

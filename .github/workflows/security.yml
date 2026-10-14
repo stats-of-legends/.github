@@ -1,0 +1,42 @@
+# Workflow réutilisable : contrôles de sécurité des dépendances.
+# Appel : jobs.security.uses: stats-of-legends/.github/.github/workflows/security.yml@v1
+# Note : CodeQL et secret scanning nécessitent un dépôt public ou un plan payant
+# pour les dépôts privés ; ils seront ajoutés au passage en plan Team.
+name: security
+
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        type: string
+        default: "npm"
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Revue des dépendances ajoutées par la PR
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+        continue-on-error: true # indisponible sur dépôt privé en plan Free : informatif seulement
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Audit des vulnérabilités connues (OSV)
+        uses: google/osv-scanner-action/osv-scanner-action@v2.6.0
+        with:
+          scan-args: |-
+            --recursive
+            ./

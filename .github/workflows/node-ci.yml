@@ -1,0 +1,79 @@
+# Workflow réutilisable : CI Node pour les dépôts de l'organisation.
+# Appel : jobs.ci.uses: stats-of-legends/.github/.github/workflows/node-ci.yml@v1
+name: node-ci
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: "22"
+      package-manager:
+        description: "npm ou pnpm (pnpm après la migration en monorepo)"
+        type: string
+        default: "npm"
+      lint-command:
+        type: string
+        default: "run lint"
+      typecheck-command:
+        type: string
+        default: "exec tsc --noEmit"
+      test-command:
+        type: string
+        default: "run test"
+      build-command:
+        type: string
+        default: "run build"
+      extra-check-command:
+        description: "Commande supplémentaire facultative (ex. run depcruise)"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [lint, typecheck, test, build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+
+      - name: Installation (lockfile figé)
+        run: |
+          if [ "${{ inputs.package-manager }}" = "pnpm" ]; then pnpm install --frozen-lockfile; else npm ci; fi
+
+      - name: Lint
+        if: matrix.check == 'lint'
+        run: ${{ inputs.package-manager }} ${{ inputs.lint-command }}
+
+      - name: Typecheck
+        if: matrix.check == 'typecheck'
+        run: ${{ inputs.package-manager }} ${{ inputs.typecheck-command }}
+
+      - name: Tests
+        if: matrix.check == 'test'
+        run: ${{ inputs.package-manager }} ${{ inputs.test-command }}
+
+      - name: Build
+        if: matrix.check == 'build'
+        run: ${{ inputs.package-manager }} ${{ inputs.build-command }}
+
+      - name: Vérification supplémentaire
+        if: matrix.check == 'lint' && inputs.extra-check-command != ''
+        run: ${{ inputs.package-manager }} ${{ inputs.extra-check-command }}
