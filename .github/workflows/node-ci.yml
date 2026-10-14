@@ -24,6 +24,10 @@ on:
       build-command:
         type: string
         default: "run build"
+      checks:
+        description: "Liste JSON des contrôles à lancer parmi lint, typecheck, test, build"
+        type: string
+        default: '["lint","typecheck","test","build"]'
       extra-check-command:
         description: "Commande supplémentaire facultative (ex. run depcruise)"
         type: string
@@ -40,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        check: [lint, typecheck, test, build]
+        check: ${{ fromJSON(inputs.checks) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,5 +79,5 @@ jobs:
         run: ${{ inputs.package-manager }} ${{ inputs.build-command }}
 
       - name: Vérification supplémentaire
-        if: matrix.check == 'lint' && inputs.extra-check-command != ''
+        if: matrix.check == 'typecheck' && inputs.extra-check-command != ''
         run: ${{ inputs.package-manager }} ${{ inputs.extra-check-command }}
